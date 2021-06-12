@@ -37,6 +37,24 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
     res.send("try GET /filteredimage?image_url={{}}")
   } );
 
+  // Filter Image Endpoint
+  // Pass image as query param to get the filtered image as a response
+  app.get( "/filteredimage", async ( req, res ) => {
+    const { image_url } = req.query
+    if(image_url){
+      try{
+        const filtered_image = await filterImageFromURL(image_url)
+        res.status(200).sendFile(filtered_image)
+      }
+      catch (e){
+        res.status(400).send('Error Process Image')
+      }
+
+    }else{
+      res.status(400).send('Image URL Required')
+    }
+  } );
+
   // Start the Server
   app.listen( port, () => {
       console.log( `server running http://localhost:${ port }` );
